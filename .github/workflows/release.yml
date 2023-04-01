@@ -1,11 +1,14 @@
 name: Releases
 
+# test trigger. push
+on: push
+
 # Trigger on releases.
-on:
-  release:
-    types:
-      - published
-      - edited
+#on:
+#  release:
+#    types:
+#      - published
+#      - edited
 
 permissions:
   contents: write
