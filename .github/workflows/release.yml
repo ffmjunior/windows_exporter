@@ -75,14 +75,17 @@ jobs:
           # goversioninfo.exe -ver-major $Env:VERSION_PARTS[0] -ver-minor $Env:VERSION_PARTS[1] -ver-patch $Env:VERSION_PARTS[2] -product-version  $Env:EXPORTER_VER -platform-specific
           goversioninfo.exe -ver-major $Env:VERSION_PARTS[0] -ver-minor 1 -ver-patch $Env:VERSION_PARTS[2] -product-version  $Env:EXPORTER_VER -platform-specific
 
-           & 'C:\Program Files (x86)\GnuWin32\bin\make.exe' crossbuild
+          #& 'C:\Program Files (x86)\GnuWin32\bin\make.exe' crossbuild
           # '+' symbols are invalid characters in image tags
-          (Get-Content -Path VERSION) -replace '\+', '_' | Set-Content -Path VERSION
-           & 'C:\Program Files (x86)\GnuWin32\bin\make.exe' build-all
+          #(Get-Content -Path VERSION) -replace '\+', '_' | Set-Content -Path VERSION
+          # & 'C:\Program Files (x86)\GnuWin32\bin\make.exe' build-all
           # GH requires all files to have different names, so add version/arch to differentiate
-          foreach($Arch in "amd64", "arm64","386") {
-            Move-Item output\$Arch\windows_exporter.exe output\windows_exporter-$Version-$Arch.exe
-          }
+          #foreach($Arch in "amd64", "arm64","386") {
+          #  Move-Item output\$Arch\windows_exporter.exe output\windows_exporter-$Version-$Arch.exe
+          #}
+          
+          promu.exe build -v
+          Move-Item .\windows_exporter.exe .\windows_exporter-$Version.exe
 
       - name: Upload Artifacts
         uses: actions/upload-artifact@v2
