@@ -55,9 +55,9 @@ jobs:
           $ErrorActionPreference = "Stop"
 
           #dotnet-gitversion /output json /showvariable FullSemVer | Set-Content VERSION -PassThru
-          $EXPORTER_VER = dotnet-gitversion /output json /showvariable FullSemVer
+          $Env:EXPORTER_VER = dotnet-gitversion /output json /showvariable FullSemVer
           
-          echo "Exporter version: $EXPORTER_VER "
+          echo "Exporter version: $Env:EXPORTER_VER "
           
           # $Version = Get-Content VERSION
           $Version =  dotnet-gitversion /output json /showvariable FullSemVer
