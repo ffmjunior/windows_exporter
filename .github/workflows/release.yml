@@ -17,6 +17,7 @@ permissions:
 
 env:
   PROMU_VER: '0.13.0'
+  EXPORTER_VER: ''
 
 jobs:
   build:
@@ -53,8 +54,13 @@ jobs:
         run: |
           $ErrorActionPreference = "Stop"
 
-          dotnet-gitversion /output json /showvariable FullSemVer | Set-Content VERSION -PassThru
-          $Version = Get-Content VERSION
+          #dotnet-gitversion /output json /showvariable FullSemVer | Set-Content VERSION -PassThru
+          $EXPORTER_VER = dotnet-gitversion /output json /showvariable FullSemVer
+          
+          echo "Exporter version: $EXPORTER_VER "
+          
+          # $Version = Get-Content VERSION
+          $Version =  dotnet-gitversion /output json /showvariable FullSemVer
           # Windows versioninfo resources need the file version by parts (but product version is free text)
           $VersionParts = ($Version -replace '^v?([0-9\.]+).*$','$1').Split(".")
           goversioninfo.exe -ver-major $VersionParts[0] -ver-minor $VersionParts[1] -ver-patch $VersionParts[2] -product-version $Version -platform-specific
