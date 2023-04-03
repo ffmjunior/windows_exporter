@@ -70,11 +70,10 @@ jobs:
           # $VersionParts = ($Env:EXPORTER_VER -replace '^v?([0-9\.]+).*$','$1').Split(".")
           $Env:VERSION_PARTS = ($Env:EXPORTER_VER -replace '^v?([0-9\.]+).*$','$1').Split(".")
           
-          echo "Exporter version: $Env:EXPORTER_VER. Version Parts: $Env:VERSION_PARTS "
           
-          #goversioninfo.exe -ver-major $VersionParts[0] -ver-minor $VersionParts[1] -ver-patch $VersionParts[2] -product-version $Version -platform-specific
-          echo "goversioninfo.exe -ver-major $Env:VERSION_PARTS[0] -ver-minor $Env:VERSION_PARTS[1] -ver-patch $Env:VERSION_PARTS[2] -product-version  $Env:EXPORTER_VER -platform-specific"
-          goversioninfo.exe -ver-major $Env:VERSION_PARTS[0] -ver-minor $Env:VERSION_PARTS[1] -ver-patch $Env:VERSION_PARTS[2] -product-version  $Env:EXPORTER_VER -platform-specific
+          # goversioninfo.exe -ver-major $VersionParts[0] -ver-minor $VersionParts[1] -ver-patch $VersionParts[2] -product-version $Version -platform-specific
+          # goversioninfo.exe -ver-major $Env:VERSION_PARTS[0] -ver-minor $Env:VERSION_PARTS[1] -ver-patch $Env:VERSION_PARTS[2] -product-version  $Env:EXPORTER_VER -platform-specific
+          goversioninfo.exe -ver-major $Env:VERSION_PARTS[0] -ver-minor 1 -ver-patch $Env:VERSION_PARTS[2] -product-version  $Env:EXPORTER_VER -platform-specific
 
           make crossbuild
           # '+' symbols are invalid characters in image tags
