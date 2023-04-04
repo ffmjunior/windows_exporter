@@ -1,3 +1,6 @@
+# this build steps require that the self hosted runner to have
+# - git
+# - make ( Winget install GnuWin32.make. Then add C:\Program Files(x86)\GnuWin32\bin\make.exe to the path)
 name: Releases
 
 # test trigger. push
