@@ -55,26 +55,20 @@ jobs:
         run: |
           $ErrorActionPreference = "Stop"
 
-          #dotnet-gitversion /output json /showvariable FullSemVer | Set-Content VERSION -PassThru
           $Env:EXPORTER_VER = dotnet-gitversion /output json /showvariable FullSemVer
           Set-Content -Path ${{ github.workspace }}/VERSION -Value $Env:EXPORTER_VER
           
           Get-Content ${{ github.workspace }}/VERSION
           
-          echo "Exporter version: $Env:EXPORTER_VER "
+          echo "Exporter version: $Env:EXPORTER_VER "       
           
-          # $Version = Get-Content VERSION
-          # $Version =  dotnet-gitversion /output json /showvariable FullSemVer
-          
-          # Windows versioninfo resources need the file version by parts (but product version is free text)
-          # $VersionParts = ($Env:EXPORTER_VER -replace '^v?([0-9\.]+).*$','$1').Split(".")
           $Env:VERSION_PARTS = ($Env:EXPORTER_VER -replace '^v?([0-9\.]+).*$','$1').Split(".")
           
-          
-          # goversioninfo.exe -ver-major $VersionParts[0] -ver-minor $VersionParts[1] -ver-patch $VersionParts[2] -product-version $Version -platform-specific
+          #TODO: fix minor version handling 
           # goversioninfo.exe -ver-major $Env:VERSION_PARTS[0] -ver-minor $Env:VERSION_PARTS[1] -ver-patch $Env:VERSION_PARTS[2] -product-version  $Env:EXPORTER_VER -platform-specific
           goversioninfo.exe -ver-major $Env:VERSION_PARTS[0] -ver-minor 1 -ver-patch $Env:VERSION_PARTS[2] -product-version  $Env:EXPORTER_VER -platform-specific
 
+          #TODO: fix crossbuild
           #& 'C:\Program Files (x86)\GnuWin32\bin\make.exe' crossbuild
           # '+' symbols are invalid characters in image tags
           #(Get-Content -Path VERSION) -replace '\+', '_' | Set-Content -Path VERSION
@@ -84,30 +78,48 @@ jobs:
           #  Move-Item output\$Arch\windows_exporter.exe output\windows_exporter-$Version-$Arch.exe
           #}
           
+          # Build and rename the exe
           promu.exe build -v
           Move-Item .\windows_exporter.exe .\windows_exporter-$Env:EXPORTER_VER.exe
 
-      - name: Upload Artifacts
-        uses: actions/upload-artifact@v2
+
+      - name: Create Release
+        id: create_release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # This token is provided by Actions, you do not need to create your own token
         with:
-          name: windows_exporter_binaries
-          path: windows_exporter-*.exe
+          tag_name: ${{ github.run_number }}
+          release_name: Release ${{ github.run_number }}
+          body: |
+            ${{ github.event.head_commit.message }}
+          draft: false
+          prerelease: false
 
-      - name: Build Release Artifacts
-        if: startsWith(github.ref, 'refs/tags/')
-        run: |
-          $ErrorActionPreference = "Stop"
-          $BuildVersion = Get-Content VERSION
-          $TagName = $env:GITHUB_REF -replace 'refs/tags/', ''
-          # The MSI version is not semver compliant, so just take the numerical parts
-          $MSIVersion = $TagName -replace '^v?([0-9\.]+).*$','$1'
-          foreach($Arch in "amd64", "arm64","386") {
-            Write-Verbose "Building windows_exporter $MSIVersion msi for $Arch"
-            .\installer\build.ps1 -PathToExecutable .\output\windows_exporter-$BuildVersion-$Arch.exe -Version $MSIVersion -Arch "$Arch"
-            Move-Item installer\Output\windows_exporter-$MSIVersion-$Arch.msi output\
-          }
 
-          promu checksum output\
+      
+
+      # - name: Upload Artifacts
+      #   uses: actions/upload-artifact@v2
+      #   with:
+      #     name: windows_exporter_binaries
+      #     path: windows_exporter-*.exe
+
+      # - name: Build Release Artifacts
+      #   if: startsWith(github.ref, 'refs/tags/')
+      #   run: |
+      #     $ErrorActionPreference = "Stop"
+      #     $BuildVersion = Get-Content VERSION
+      #     $TagName = $env:GITHUB_REF -replace 'refs/tags/', ''
+      #     # The MSI version is not semver compliant, so just take the numerical parts
+      #     $MSIVersion = $TagName -replace '^v?([0-9\.]+).*$','$1'
+      #     foreach($Arch in "amd64", "arm64","386") {
+      #       Write-Verbose "Building windows_exporter $MSIVersion msi for $Arch"
+      #       .\installer\build.ps1 -PathToExecutable .\output\windows_exporter-$BuildVersion-$Arch.exe -Version $MSIVersion -Arch "$Arch"
+      #       Move-Item installer\Output\windows_exporter-$MSIVersion-$Arch.msi output\
+      #     }
+
+      #     promu checksum output\
 
       #- name: Login to GitHub container registry
       #  if: ${{ github.event_name != 'pull_request' }}
@@ -125,11 +137,11 @@ jobs:
       #    $Env:VERSION = 'latest'
       #    make push-all
 
-      - name: Release
-        if: startsWith(github.ref, 'refs/tags/')
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: |
-          $TagName = $env:GITHUB_REF -replace 'refs/tags/', ''
-          Get-ChildItem -Path output\* -Include @('windows_exporter*.msi', 'windows_exporter*.exe', 'sha256sums.txt') | Foreach-Object {gh release upload $TagName $_}
-          make push-all
+      # - name: Release
+      #   if: startsWith(github.ref, 'refs/tags/')
+      #   env:
+      #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      #   run: |
+      #     $TagName = $env:GITHUB_REF -replace 'refs/tags/', ''
+      #     Get-ChildItem -Path output\* -Include @('windows_exporter*.msi', 'windows_exporter*.exe', 'sha256sums.txt') | Foreach-Object {gh release upload $TagName $_}
+      #     make push-all
