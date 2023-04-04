@@ -100,6 +100,7 @@ jobs:
           body: |
             ${{ github.event.head_commit.message }}
             ${{ env.EXE_NAME }}
+            "$Env:EXE_NAME"
 
           draft: false
           prerelease: false
