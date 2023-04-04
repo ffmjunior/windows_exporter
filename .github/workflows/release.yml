@@ -19,7 +19,6 @@ env:
   PROMU_VER: '0.13.0'
   EXPORTER_VER: ''
   VERSION_PARTS: ''
-  EXE_NAME: 'bliu'
 
 jobs:
   build:
@@ -80,16 +79,12 @@ jobs:
           #}
           
           # Build and rename the exe
-          promu.exe build -v
-          $Env:EXE_NAME="windows_exporter-$Env:EXPORTER_VER.exe"
-          #Move-Item .\windows_exporter.exe .\windows_exporter-$Env:EXPORTER_VER.exe
+          #$Env:EXE_NAME="windows_exporter-$Env:EXPORTER_VER.exe"
+          "exe_name=$Env:EXE_NAME" >> $env:GITHUB_ENV
+          promu.exe build -v          
+          Move-Item .\windows_exporter.exe ${{ env.exe_name }}
           
-          "action_state=$Env:EXE_NAME" >> $env:GITHUB_ENV
-
-          echo "Exe name: $Env:EXE_NAME "
-          echo "Exe name ${{ env.EXE_NAME }} . "
-
-          echo "E ${{ env.action_state }} C" # This will output 'yellow'
+          
 
 
       - name: Create Release #TODO: Update to an updated repo          
@@ -101,11 +96,8 @@ jobs:
           tag_name: ${{ github.run_number }}
           release_name: Release ${{ github.run_number }}
           body: |
-            ${{ github.event.head_commit.message }}
-            ${{ env.EXE_NAME }}
-            $Env:EXE_NAME
-            ${{ env.action_state }}
-            $Env.action_state
+            ${{ github.event.head_commit.message }}            
+            Generated ${{ env.exe_name }}            
 
           draft: false
           prerelease: false
@@ -117,8 +109,8 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} 
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }} # This pulls from the CREATE RELEASE step above, referencing it's ID to get its outputs object, which include a `upload_url`. See this blog post for more info: https://jasonet.co/posts/new-features-of-github-actions/#passing-data-to-future-steps 
-          asset_path: .\windows_exporter.exe
-          asset_name: windows_exporter.exe
+          asset_path: ${{ env.exe_name }} 
+          asset_name: ${{ env.exe_name }} 
           asset_content_type: application/vnd.microsoft.portable-executable
 
 
