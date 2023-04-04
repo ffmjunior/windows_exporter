@@ -96,21 +96,22 @@ jobs:
           release_name: Release ${{ github.run_number }}
           body: |
             ${{ github.event.head_commit.message }}
+            ${{ $Env:EXE_NAME }}
           draft: false
           prerelease: false
 
-      - name: Upload Release Asset
-        id: upload-release-asset 
-        uses: actions/upload-release-asset@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: |
-          echo "Exe Name: $Env:EXE_NAME . "  
-        with:
-          upload_url: ${{ steps.create_release.outputs.upload_url }} # This pulls from the CREATE RELEASE step above, referencing it's ID to get its outputs object, which include a `upload_url`. See this blog post for more info: https://jasonet.co/posts/new-features-of-github-actions/#passing-data-to-future-steps 
-          asset_path: .\windows_exporter-$Env:EXPORTER_VER.exe
-          asset_name: ${{ EXE_NAME }}
-          asset_content_type: application/exe
+      # - name: Upload Release Asset
+      #   id: upload-release-asset 
+      #   uses: actions/upload-release-asset@v1
+      #   env:
+      #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      #   run: |
+      #     echo "Exe Name: $Env:EXE_NAME . "  
+      #   with:
+      #     upload_url: ${{ steps.create_release.outputs.upload_url }} # This pulls from the CREATE RELEASE step above, referencing it's ID to get its outputs object, which include a `upload_url`. See this blog post for more info: https://jasonet.co/posts/new-features-of-github-actions/#passing-data-to-future-steps 
+      #     asset_path: .\windows_exporter-$Env:EXPORTER_VER.exe
+      #     asset_name: ${{ EXE_NAME }}
+      #     asset_content_type: application/exe
 
 
       
