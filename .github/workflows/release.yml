@@ -82,7 +82,7 @@ jobs:
           #$Env:EXE_NAME="windows_exporter-$Env:EXPORTER_VER.exe"
           "exe_name=windows_exporter-$Env:EXPORTER_VER.exe" >> $env:GITHUB_ENV
           promu.exe build -v          
-          Move-Item .\windows_exporter.exe ${{ env.exe_name }}
+          Move-Item .\windows_exporter.exe .\windows_exporter-$Env:EXPORTER_VER.exe"
           
           
 
