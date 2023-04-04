@@ -84,7 +84,8 @@ jobs:
           $Env:EXE_NAME="windows_exporter-$Env:EXPORTER_VER.exe"
           Move-Item .\windows_exporter.exe .\windows_exporter-$Env:EXPORTER_VER.exe
 
-          echo "Exe name: $Env:EXE_NAME " 
+          echo "Exe name: $Env:EXE_NAME "
+          echo "Exe name ${{ env.EXE_NAME }} . "
 
 
 
