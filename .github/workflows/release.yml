@@ -84,7 +84,7 @@ jobs:
           $Env:EXE_NAME="windows_exporter-$Env:EXPORTER_VER.exe"
           #Move-Item .\windows_exporter.exe .\windows_exporter-$Env:EXPORTER_VER.exe
           
-          "action_state=yellow" >> $env:GITHUB_ENV
+          "action_state=$Env:EXE_NAME" >> $env:GITHUB_ENV
 
           echo "Exe name: $Env:EXE_NAME "
           echo "Exe name ${{ env.EXE_NAME }} . "
