@@ -104,6 +104,8 @@ jobs:
             ${{ github.event.head_commit.message }}
             ${{ env.EXE_NAME }}
             $Env:EXE_NAME
+            ${{ env.action_state }}
+            $Env.action_state
 
           draft: false
           prerelease: false
@@ -119,7 +121,7 @@ jobs:
           upload_url: ${{ steps.create_release.outputs.upload_url }} # This pulls from the CREATE RELEASE step above, referencing it's ID to get its outputs object, which include a `upload_url`. See this blog post for more info: https://jasonet.co/posts/new-features-of-github-actions/#passing-data-to-future-steps 
           asset_path: .\windows_exporter.exe
           asset_name: .\windows_exporter.exe
-          asset_content_type: application/exe
+          #asset_content_type: application/exe
 
 
       
