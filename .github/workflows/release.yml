@@ -19,7 +19,7 @@ env:
   PROMU_VER: '0.13.0'
   EXPORTER_VER: ''
   VERSION_PARTS: ''
-  EXE_NAME: ''
+  EXE_NAME: 'bliu'
 
 jobs:
   build:
@@ -84,7 +84,7 @@ jobs:
           $Env:EXE_NAME="windows_exporter-$Env:EXPORTER_VER.exe"
           Move-Item .\windows_exporter.exe .\windows_exporter-$Env:EXPORTER_VER.exe
           
-          echo "EXE_NAME=$Env:EXE_NAME" >> $GITHUB_ENV
+          echo "EXE_NAME=bliua" >> $GITHUB_ENV
 
           echo "Exe name: $Env:EXE_NAME "
           echo "Exe name ${{ env.EXE_NAME }} . "
