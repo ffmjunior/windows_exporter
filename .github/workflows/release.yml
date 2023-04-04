@@ -19,6 +19,7 @@ env:
   PROMU_VER: '0.13.0'
   EXPORTER_VER: ''
   VERSION_PARTS: ''
+  EXE_NAME: ''
 
 jobs:
   build:
@@ -80,10 +81,14 @@ jobs:
           
           # Build and rename the exe
           promu.exe build -v
-          Move-Item .\windows_exporter.exe .\windows_exporter-$Env:EXPORTER_VER.exe
+          $Env:EXE_NAME=.\windows_exporter-$Env:EXPORTER_VER.exe
+          Move-Item .\windows_exporter.exe $Env:EXE_NAME
+
 
 
       - name: Create Release #TODO: Update to an updated repo
+        run: |
+          echo "Exe Name: $Env:EXE_NAME . "    
         id: create_release
         uses: actions/create-release@v1
         env:
@@ -103,7 +108,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }} # This pulls from the CREATE RELEASE step above, referencing it's ID to get its outputs object, which include a `upload_url`. See this blog post for more info: https://jasonet.co/posts/new-features-of-github-actions/#passing-data-to-future-steps 
-          asset_path: ./windows_exporter-$Env:EXPORTER_VER.exe
+          asset_path: .\windows_exporter-$Env:EXPORTER_VER.exe
           asset_name: windows_exporter-$Env:EXPORTER_VER.exe
           asset_content_type: application/exe
 
