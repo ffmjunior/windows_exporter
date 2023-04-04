@@ -85,7 +85,7 @@ jobs:
           promu.exe build -v          
           Move-Item .\windows_exporter.exe .\windows_exporter-$Env:EXPORTER_VER.exe
 
-          # Required to upload the exe to the release. Direct assignement was not working
+          # Required to upload the exe to the release. Direct assignment was not working
           "exe_name=windows_exporter-$Env:EXPORTER_VER.exe" >> $env:GITHUB_ENV
 
       - name: Create Release #TODO: Update to an updated repo          
