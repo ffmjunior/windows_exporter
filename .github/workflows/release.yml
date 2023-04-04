@@ -84,12 +84,12 @@ jobs:
           $Env:EXE_NAME="windows_exporter-$Env:EXPORTER_VER.exe"
           Move-Item .\windows_exporter.exe .\windows_exporter-$Env:EXPORTER_VER.exe
           
-          "EXE_NAME_2=bliua" >> $Env:GITHUB_ENV
+          "action_state=yellow" >> $env:GITHUB_ENV
 
           echo "Exe name: $Env:EXE_NAME "
           echo "Exe name ${{ env.EXE_NAME }} . "
-          echo "Exe name: $Env:EXE_NAME_2 "
-          echo "Exe name ${{ env.EXE_NAME2 }} . "
+
+          echo "${{ env.action_state }}" # This will output 'yellow'
 
 
 
