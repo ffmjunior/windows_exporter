@@ -64,7 +64,7 @@ jobs:
           Get-Content ${{ github.workspace }}/VERSION    
                 
           # Required to set the version in the installer using Make
-          # $Env:VERSION_PARTS = ($Env:EXPORTER_VER -replace '^v?([0-9\.]+).*$','$1').Split(".")
+          $Env:VERSION_PARTS = ($Env:EXPORTER_VER -replace '^v?([0-9\.]+).*$','$1').Split(".")
 
           echo "Exporter version: $Env:EXPORTER_VER " 
           
