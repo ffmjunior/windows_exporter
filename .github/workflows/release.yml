@@ -98,7 +98,6 @@ jobs:
           release_name: Release ${{ github.run_number }}
           body: |
             ${{ github.event.head_commit.message }}
-            ${{ $Env:EXE_NAME }}
           draft: false
           prerelease: false
 
