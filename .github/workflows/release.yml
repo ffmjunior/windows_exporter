@@ -4,7 +4,13 @@
 name: Releases
 
 # test trigger. push
-on: push
+on:
+  push:
+    branches:
+      - master
+  pull_request:
+    branches:
+      - master
 
 # Trigger on releases.
 #on:
