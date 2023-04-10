@@ -1,5 +1,6 @@
 //go:build windows
 // +build windows
+// test 01
 
 package main
 
